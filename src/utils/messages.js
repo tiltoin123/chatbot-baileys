@@ -8,7 +8,7 @@ function warningMessage(message) {
   return `${BOT_EMOJI} ⚠ Atenção! ${message}`;
 }
 
-function menuMessage() {
+function menuMessage() {//este arquivo contem menu de comando do bot para interação com o usuário sua definição está em actions/index
   const date = new Date();
 
   return `╭━━⪩ BEM VINDO! ⪨━━

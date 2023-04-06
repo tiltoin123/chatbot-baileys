@@ -2,16 +2,16 @@ const { BOT_EMOJI, TEMP_FOLDER } = require("../config");
 const { consultarCep } = require("correios-brasil");
 const {
   extractDataFromMessage,
-  downloadImage,
+  downloadImage,//este arquivo cria a classe actions e da várias funções para a classe
   downloadVideo,
   downloadSticker,
 } = require("../utils");
 const path = require("path");
-const { exec } = require("child_process");
-const fs = require("fs");
+const { exec } = require("child_process");//função do node para executar programas em paralelo em outro terminal
+const fs = require("fs");//facilitador para interação com o sistema de arquivos tambem vem com o node
 const { errorMessage, warningMessage } = require("../utils/messages");
 
-class Action {
+class Action {//definição de classe
   constructor(bot, baileysMessage) {
     const { remoteJid, args, isImage, isVideo, isSticker } =
       extractDataFromMessage(baileysMessage);
@@ -19,7 +19,7 @@ class Action {
     this.bot = bot;
     this.remoteJid = remoteJid;
     this.args = args;
-    this.isImage = isImage;
+    this.isImage = isImage;//este bloco extrai dados da mensagem função definida em utils/index
     this.isVideo = isVideo;
     this.isSticker = isSticker;
     this.baileysMessage = baileysMessage;
@@ -27,7 +27,7 @@ class Action {
 
   async cep() {
     if (!this.args || ![8, 9].includes(this.args.length)) {
-      await this.bot.sendMessage(this.remoteJid, {
+      await this.bot.sendMessage(this.remoteJid, {//com a inserção do cep retorna mais dados a respeito
         text: errorMessage(
           "Você precisa enviar um CEP no formato xxxxx-xxx ou xxxxxxxx!"
         ),
@@ -68,7 +68,7 @@ Erro: ${error.message}`),
 
   async sticker() {
     if (!this.isImage && !this.isVideo) {
-      await this.bot.sendMessage(this.remoteJid, {
+      await this.bot.sendMessage(this.remoteJid, {// cria uma figurinha ou figurinha animada usando um video de até 10 segundos
         text: errorMessage("Você precisa enviar uma imagem ou um vídeo!"),
       });
       return;
@@ -79,8 +79,8 @@ Erro: ${error.message}`),
     if (this.isImage) {
       const inputPath = await downloadImage(this.baileysMessage, "input");
 
-      exec(
-        `ffmpeg -i ${inputPath} -vf scale=512:512 ${outputPath}`,
+      exec(//cria uma figurinha usando uma imagem
+        `ffmpeg -i ${inputPath} -vf scale=320:320 ${outputPath}`,
         async (error) => {
           if (error) {
             console.log(error);
@@ -109,7 +109,7 @@ Erro: ${error.message}`),
 
       const seconds =
         this.baileysMessage.message?.videoMessage?.seconds ||
-        this.baileysMessage.message?.extendedTextMessage?.contextInfo
+        this.baileysMessage.message?.extendedTextMessage?.contextInfo//testa a duração do video
           ?.quotedMessage?.videoMessage?.seconds;
 
       const haveSecondsRule = seconds <= sizeInSeconds;
@@ -126,7 +126,7 @@ Envie um vídeo menor!`),
         return;
       }
 
-      exec(
+      exec(//saida de arquivo de video
         `ffmpeg -i ${inputPath} -y -vcodec libwebp -fs 0.99M -filter_complex "[0:v] scale=512:512,fps=12,pad=512:512:-1:-1:color=white@0.0,split[a][b];[a]palettegen=reserve_transparent=on:transparency_color=ffffff[p];[b][p]paletteuse" -f webp ${outputPath}`,
         async (error) => {
           if (error) {
@@ -153,7 +153,7 @@ Envie um vídeo menor!`),
   }
 
   async toImage() {
-    if (!this.isSticker) {
+    if (!this.isSticker) {//transforma figurinha em imagem
       await this.bot.sendMessage(this.remoteJid, {
         text: errorMessage("Você precisa enviar um sticker!"),
       });

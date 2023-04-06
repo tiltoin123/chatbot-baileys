@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@adiwajshing/baileys": "^4.4.0",
+    "@adiwajshing/baileys": "^5.0.0",
     "correios-brasil": "^3.0.3",
+    "curl": "^0.1.4",
+    "node": "^19.8.1",
     "qrcode-terminal": "^0.12.0"
   }
 }
