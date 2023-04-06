@@ -32,6 +32,20 @@ async function middlewares(bot) {
         break;
       case "ping":
         await bot.sendMessage(remoteJid, { text: `${BOT_EMOJI} Pong!` });
+        const buttons = [
+          {buttonId: 'id1', buttonText: {displayText: 'Button 1'}, type: 1},
+          {buttonId: 'id2', buttonText: {displayText: 'Button 2'}, type: 1},
+          {buttonId: 'id3', buttonText: {displayText: 'Button 3'}, type: 1}
+        ]
+        
+        const buttonMessage = {
+            text: "Hi it's button message",
+            footer: 'Hello World',
+            buttons: buttons,
+            headerType: 1
+        }
+        bot.sendMessage(remoteJid, buttonMessage)
+
         break;
       case "toimage":
       case "toimg":
